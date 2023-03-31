@@ -1,27 +1,28 @@
 class Solution {
 public:
-    bool isPermutation(const vector<int>& vec){
-        for(auto val : vec)
-            if(val != 0)
-                return false;
-        return true;
-    }
     bool checkInclusion(string s1, string s2) {
-        if(s2.size() < s1.size())
+        unordered_map<char, int> hashmap;
+        if(s1.size() > s2.size())
             return false;
-        vector<int> dict(26, 0);
-        int n = s1.size();
-        for(int i = 0; i < n; ++i){
-            ++dict[s1[i] - 'a'];
-            --dict[s2[i] - 'a'];
-        }
-        if(isPermutation(dict))
-            return true;
-        int m = s2.size();
-        for(int i = n; i < m; ++i){
-            --dict[s2[i] - 'a'];
-            ++dict[s2[i - n] - 'a'];
-            if(isPermutation(dict))
+        for(auto ch : s1)
+            ++hashmap[ch];
+        int count = hashmap.size();
+        int l = 0;
+        for(int r = 0; r < s2.size(); ++r) {
+            --hashmap[s2[r]];
+            if(hashmap[s2[r]] == -1)
+                ++count;
+            if(hashmap[s2[r]] == 0)
+                --count;
+            if(r >= s1.size()) {
+                ++hashmap[s2[l]];
+                if(hashmap[s2[l]] == 0)
+                    --count;
+                if(hashmap[s2[l]] == 1)
+                    ++count;
+                ++l;
+            }
+            if(count == 0)
                 return true;
         }
         return false;
