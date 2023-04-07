@@ -2,27 +2,23 @@ class Solution {
 public:
     int numUniqueEmails(vector<string>& emails) {
         unordered_set<string> actual;
-        for(auto &e : emails) {
-            int at_position = e.find('@');
-            bool skip = false;
-            bool domain = false;
+        for(auto &email : emails) {
             int j = 0;
-            for(int i = 0; i < e.size(); ++i) {
-                if(e[i] == '.' && !domain)
+            int at_position = email.find('@');
+            for(int i = 0; i < at_position; ++i) {
+                if(email[i] == '+')
+                    break;
+                if(email[i] == '.')
                     continue;
-                if(e[i] == '+' && !domain)
-                    skip = true;
-                if(e[i] == '@'){
-                    domain = true;
-                    skip = false;
-                }
-                if(!skip) {
-                    e[j] = e[i];
-                    ++j;
-                }
+                email[j] = email[i];
+                ++j;
             }
-            e.resize(j);
-            actual.insert(e);
+            for(int i = at_position; i < email.size(); ++i) {
+                email[j] = email[i];
+                ++j;
+            }
+            email.resize(j);
+            actual.insert(email);
         }
         return actual.size();
     }

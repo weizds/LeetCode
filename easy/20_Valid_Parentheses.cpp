@@ -1,5 +1,7 @@
 class Solution {
 public:
+    // Using stack to keep track of opening symbols and check whether 
+    // each closing symbol matches its corresponding opening symbol in a map
     bool isValid(string s) {
         stack<char> stack;
         unordered_map<char, char> map{{')', '('}, {']', '['}, {'}', '{'}};
