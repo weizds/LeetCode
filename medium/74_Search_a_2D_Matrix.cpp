@@ -1,29 +1,34 @@
 class Solution {
 public:
     bool searchMatrix(vector<vector<int>>& matrix, int target) {
-        int top = 0;
-        int bot = matrix.size() - 1;
-        while(top <= bot){
-            int mid = top + (bot - top) / 2;
-            if(matrix[mid].back() < target){
-                top = mid + 1;
-            }else if(matrix[mid].front() > target){
-                bot = mid - 1;
-            }else{
-                int low = 0;
-                int high = matrix[0].size() - 1;
-                while(low <= high){
-                    int mid2 = low + (high - low) / 2;
-                    if(matrix[mid][mid2] < target){
-                        low = mid2 + 1;
-                    }else if(matrix[mid][mid2] > target){
-                        high = mid2 - 1;
-                    }else{
-                        return true;
-                    }
-                }
-                return false;
+        int n = matrix.size();
+        int m = matrix.back().size();
+        int low_row = 0;
+        int high_row = n - 1;
+        while(low_row < high_row) {
+            int mid_row = (high_row + low_row) / 2;
+            if(matrix[mid_row][0] == target)
+                return true;
+            if(matrix[mid_row][0] < target && target <= matrix[mid_row][m - 1]) {
+                low_row = mid_row;
+                break;
             }
+            if(matrix[mid_row][0] > target) {
+                high_row = mid_row - 1;
+            }else{
+                low_row = mid_row + 1;
+            }
+        }
+        int low_col = 0;
+        int high_col = m - 1;
+        while(low_col <= high_col) {
+            int mid = (high_col + low_col) / 2;
+            if(matrix[low_row][mid] == target)
+                return true;
+            else if(matrix[low_row][mid] < target)
+                low_col = mid + 1;
+            else
+                high_col = mid - 1;
         }
         return false;
     }
