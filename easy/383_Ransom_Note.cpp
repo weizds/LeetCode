@@ -1,12 +1,12 @@
 class Solution {
 public:
-    bool isAnagram(string s, string t) {
-        if(s.size() != t.size())
+    bool canConstruct(string ransomNote, string magazine) {
+        if(ransomNote.size() > magazine.size())
             return false;
-        std::vector<int> dict(26, 0);
-        for(auto ch : s)
+        vector<int> dict(26, 0);
+        for(auto ch : magazine)
             ++dict[ch - 'a'];
-        for(auto ch : t) {
+        for(auto ch : ransomNote) {
             --dict[ch - 'a'];
             if(dict[ch - 'a'] < 0)
                 return false;
