@@ -10,57 +10,38 @@
  */
 class Solution {
 public:
-    int listCount(ListNode *node){
-        int count = 0;
-        while(node->next){
-            count++;
-            node = node->next;
+    ListNode* reverseList(ListNode* head) {
+        ListNode* prev = nullptr;
+        ListNode* node = head;
+        while(node != nullptr) {
+            ListNode* tmp = node->next;
+            node->next = prev;
+            prev = node;
+            node = tmp;
         }
-        return count;
+        return prev;
     }
-
-    void listAdd(ListNode* dst, ListNode* src){
-        while(dst && src){
-            dst->val += src->val;
-            dst = dst->next;
-            src = src->next;
-        }
-    }
-    
-    void listTidyUp(ListNode *node){
-        if(node->next){
-            listTidyUp(node->next);
-            if(node->next->val >= 10){
-                node->next->val -= 10;    
-                node->val++;
-            }
-        }
-    }
-  
     ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
-        int l1_size = listCount(l1);
-        int l2_size = listCount(l2);
-        ListNode* tmp = NULL;
-        if(l1_size >= l2_size){
-            tmp = l1;
-            for(int i = 0; i < l1_size - l2_size; i++, tmp = tmp->next);
-            listAdd(tmp, l2);
-            listTidyUp(l1);
-            if(l1->val >= 10){
-                l1->val -= 10;
-                l1 = new ListNode(1, l1);
+        l1 = reverseList(l1);
+        l2 = reverseList(l2);
+        int carry = 0;
+        ListNode dummy;
+        ListNode* node = &dummy;
+        while(l1 != nullptr || l2 != nullptr) {
+            if(l1 != nullptr) {
+                carry += l1->val;
+                l1 = l1->next;
             }
-            return l1;
-        }else{
-            tmp = l2;
-            for(int i = 0; i < l2_size - l1_size; i++, tmp = tmp->next);
-            listAdd(tmp, l1);
-            listTidyUp(l2);
-            if(l2->val >= 10){
-                l2->val -= 10;
-                l2 = new ListNode(1, l2);
+            if(l2 != nullptr) {
+                carry += l2->val;
+                l2 = l2->next;
             }
-            return l2;
+            node->next = new ListNode(carry % 10);
+            node = node->next;
+            carry /= 10;
         }
+        if(carry > 0)
+            node->next = new ListNode(carry % 10);
+        return reverseList(dummy.next);
     }
 };
